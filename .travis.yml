@@ -7,5 +7,6 @@ osx_image: xcode8.2
 before_install:
   - gem install xcpretty -N --no-ri --no-rdoc
 script:
+  - cd CheckAppNewVersion
   - xcodebuild clean -project CheckAppNewVersion.xcodeproj -sdk iphonesimulator -target CheckAppNewVersion -configuration Debug
   - xcodebuild -project CheckAppNewVersion.xcodeproj -sdk iphonesimulator -target CheckAppNewVersion -configuration Debug | xcpretty -c
