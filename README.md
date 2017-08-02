@@ -1,5 +1,6 @@
 # AppVersionManage
 [![Build Status](https://travis-ci.org/zzyhappyzzy/AppVersionManage.svg?branch=master)](https://travis-ci.org/zzyhappyzzy/AppVersionManage)
+
 Check iOS app newest version according to appstore automaticly. It works on iOS 6.0+ and requires ARC to build.
 # How to use
 1. directly add the ZZYAppVersionManager.h and ZZYAppVersionManager.m source files to your project
