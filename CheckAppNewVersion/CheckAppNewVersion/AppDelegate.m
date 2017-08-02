@@ -22,7 +22,14 @@
     
     //如果app还未上架appStore，appstoreId可以不传。默认用bundleId获取app的信息
     [ZZYAppVersionManager sharedInstance].appstoreId = @"989673964";  //王者荣耀的id
-    [ZZYAppVersionManager sharedInstance].appstoreCountry = @"cn";   //中国appstore
+    [ZZYAppVersionManager sharedInstance].appstoreCountry = @"cn";   //中国appstore(由于王者荣耀美国us的appstore没有，此处暂传cn)
+    //实际上，上架到appstore的包完全无需设置appstoreId和appstoreCountry，直接用默认值即可
+    
+    
+//    [ZZYAppVersionManager sharedInstance].versionHandle = ^(NSString *releaseNote) {
+//        //TODO:: 实现自定义弹窗的方法（推荐用默认的弹窗即可）
+//        NSLog(@"release note is %@",releaseNote);
+//    };
     
     [[ZZYAppVersionManager sharedInstance] start];
     
