@@ -40,10 +40,6 @@ static NSString *const lastAlertTimeKey = @"zzyNewestVersionLastTime";
     return self;
 }
 
-- (void)start {
-    [self registerNotifications];
-}
-
 - (void)basicInit {
     //default interval
 #if DEBUG
@@ -75,24 +71,12 @@ static NSString *const lastAlertTimeKey = @"zzyNewestVersionLastTime";
     
     //bundle id
     self.bundleId = [[NSBundle mainBundle] bundleIdentifier];
-    
-    //appstore url
-    if (self.appstoreId) {
-        self.appstoreUrl = [NSString stringWithFormat:@"https://itunes.apple.com/%@/app/id%@?mt=8",self.appstoreCountry,self.appstoreId];
-    }
 }
 
-- (void)registerNotifications {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidFinishLaunching:) name:UIApplicationDidFinishLaunchingNotification object:nil];
-}
+#pragma mark ---Methods---
 
-- (void)applicationWillEnterForeground:(NSNotification *)noti {
-    [self checkVersionAccordingToAppstoreInfo];
-}
-
-- (void)applicationDidFinishLaunching:(NSNotification *)noti {
-    [self checkVersionAccordingToAppstoreInfo];
+- (void)start {
+    [self registerNotifications];
 }
 
 - (void)checkVersionAccordingToAppstoreInfo {
@@ -181,11 +165,11 @@ static NSString *const lastAlertTimeKey = @"zzyNewestVersionLastTime";
     if (iOSVersion >= 8.0) {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:title message:detail preferredStyle:UIAlertControllerStyleAlert];
         
-        [alert addAction:[UIAlertAction actionWithTitle:@"忽略" style:UIAlertActionStyleDefault handler:^(__unused UIAlertAction *action) {
+        [alert addAction:[UIAlertAction actionWithTitle:@"忽略" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             
         }]];
-        
-        [alert addAction:[UIAlertAction actionWithTitle:@"去下载" style:UIAlertActionStyleDefault handler:^(__unused UIAlertAction *action) {
+
+        [alert addAction:[UIAlertAction actionWithTitle:@"去下载" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [self openAppInAppstore];
         }]];
         
@@ -205,7 +189,25 @@ static NSString *const lastAlertTimeKey = @"zzyNewestVersionLastTime";
     }
 }
 
+#pragma mark ---Notifications
+- (void)registerNotifications {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationDidFinishLaunching:) name:UIApplicationDidFinishLaunchingNotification object:nil];
+}
+
+- (void)applicationWillEnterForeground:(NSNotification *)noti {
+    [self checkVersionAccordingToAppstoreInfo];
+}
+
+- (void)applicationDidFinishLaunching:(NSNotification *)noti {
+    [self checkVersionAccordingToAppstoreInfo];
+}
+
+#pragma mark ---Open url---
 - (void)openAppInAppstore {
+    if (!self.appstoreUrl && self.appstoreId) {
+        self.appstoreUrl = [NSString stringWithFormat:@"https://itunes.apple.com/%@/app/id%@?mt=8",self.appstoreCountry,self.appstoreId];
+    }
     if (!self.appstoreUrl) return;
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.appstoreUrl]];
 }
@@ -216,12 +218,14 @@ static NSString *const lastAlertTimeKey = @"zzyNewestVersionLastTime";
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
 }
 
+#pragma mak ---Alertview delegate---
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) {
         [self openAppInAppstore];
     }
 }
 
+#pragma mark ---Memmory---
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }

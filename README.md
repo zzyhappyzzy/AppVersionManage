@@ -21,4 +21,6 @@ If you want to alert user a new version is available, you can implemetion `NewVe
 };
 [[ZZYAppVersionManager sharedInstance] start];
 ```
+# Note
+Instead of running the project on simulator, you should run it on device.
 
