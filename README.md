@@ -13,13 +13,17 @@ Check iOS app newest version according to appstore automatically. It works on iO
 [[ZZYAppVersionManager sharedInstance] start];
 ```
 # Addition
-If you want to alert user a new version is available, you can implemetion `NewVersionHandle` block yourself with a custom alert view.
+* you can implemetion `NewVersionHandle` block yourself with a custom alert view.
 ```objc
 [ZZYAppVersionManager sharedInstance].versionHandle = ^(NSString *releaseNote) {
     //TODO:: 实现自定义弹窗的方法（推荐用默认的弹窗即可）
     NSLog(@"release note is %@",releaseNote);
 };
 [[ZZYAppVersionManager sharedInstance] start];
+```
+* set the minimal alert time interval
+```objc
+[ZZYAppVersionManager sharedInstance].minimalInterval = 24 * 3600;
 ```
 # Note
 Instead of running the project on simulator, you should run it on device.
