@@ -23,6 +23,7 @@
     //如果app还未上架appStore，appstoreId可以不传。默认用bundleId获取app的信息
     [ZZYAppVersionManager sharedInstance].appstoreId = @"989673964";  //王者荣耀的id
     [ZZYAppVersionManager sharedInstance].appstoreCountry = @"cn";   //中国appstore(由于王者荣耀美国us的appstore没有，此处暂传cn)
+    [ZZYAppVersionManager sharedInstance].minimalInterval = 10;  //提醒的最小间隔（秒）
     //实际上，上架到appstore的包完全无需设置appstoreId和appstoreCountry，直接用默认值即可
     
     

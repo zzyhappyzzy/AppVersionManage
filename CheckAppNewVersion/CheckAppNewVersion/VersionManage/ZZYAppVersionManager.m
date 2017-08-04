@@ -11,6 +11,8 @@
 
 #define iOSVersion [[[UIDevice currentDevice] systemVersion] floatValue]
 
+static NSString *const lastAlertTimeKey = @"zzyNewestVersionLastTime";
+
 @interface ZZYAppVersionManager()<UIAlertViewDelegate>
 
 @property (nonatomic, copy) NSString *appVersion;
@@ -43,6 +45,12 @@
 }
 
 - (void)basicInit {
+    //default interval
+#if DEBUG
+    self.minimalInterval = 1;
+#else
+    self.minimalInterval = 24 * 3600;
+#endif
     //country
     self.appstoreCountry = [(NSLocale *)[NSLocale currentLocale] objectForKey:NSLocaleCountryCode];
     if ([self.appstoreCountry isEqualToString:@"150"]) {
@@ -129,7 +137,8 @@
     //方便测试，debug暂不校验bundleId
     if (![bundleId isEqualToString:self.bundleId]) return;
 #endif
-
+    if (![self checkMinimalInterval]) return;
+    
     if ([self.appVersion compare:version options:NSNumericSearch] == NSOrderedAscending) {
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             if (self.versionHandle != NULL) {
@@ -141,6 +150,25 @@
             }
         }];
     }
+}
+
+- (BOOL)checkMinimalInterval {
+    BOOL showAlert = NO;
+    NSNumber *last = [[NSUserDefaults standardUserDefaults] objectForKey:lastAlertTimeKey];
+    if (!last) {
+        showAlert = YES;
+    }
+    int nowInterval = [[NSDate date] timeIntervalSince1970];
+    if (last && nowInterval - [last intValue] > self.minimalInterval) {
+        showAlert = YES;
+    }
+    
+    if (showAlert) {
+        [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:nowInterval] forKey:lastAlertTimeKey];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+    }
+    
+    return showAlert;
 }
 
 - (void)showNewVersionAlert:(NSString *)detail {
@@ -184,7 +212,7 @@
 
 - (void)openAppInAppstoreWithReviewPage {
     if (!self.appstoreId) return;
-    NSString *url = [NSString stringWithFormat:@"http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=%@&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8",self.appstoreId];
+    NSString *url = [NSString stringWithFormat:@"https://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=%@&pageNumber=0&sortOrdering=2&type=Purple+Software&mt=8",self.appstoreId];
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:url]];
 }
 

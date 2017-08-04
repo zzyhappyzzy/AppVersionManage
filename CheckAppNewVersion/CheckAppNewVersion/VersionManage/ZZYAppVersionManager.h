@@ -180,6 +180,11 @@ typedef void(^NewVersionHandle)(NSString *releaseNote);
  */
 @property (nonatomic, copy) NewVersionHandle versionHandle;
 
+/**
+ 距离上次弹框提示的最小时间（单位：秒）
+ */
+@property (nonatomic, assign) unsigned int minimalInterval;
+
 + (instancetype)sharedInstance;
 
 - (void)start;
