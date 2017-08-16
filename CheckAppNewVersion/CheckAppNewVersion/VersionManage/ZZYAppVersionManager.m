@@ -117,7 +117,7 @@ static NSString *const lastAlertTimeKey = @"zzyNewestVersionLastTime";
 
 - (void)checkWithVersion:(NSString *)version bundleId:(NSString *)bundleId note:(NSString *)note {
     if (!bundleId || !version) return;
-#if NDEBUG
+#ifndef DEBUG
     //方便测试，debug暂不校验bundleId
     if (![bundleId isEqualToString:self.bundleId]) return;
 #endif
