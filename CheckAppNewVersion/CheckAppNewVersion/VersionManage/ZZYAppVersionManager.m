@@ -121,9 +121,8 @@ static NSString *const lastAlertTimeKey = @"zzyNewestVersionLastTime";
     //方便测试，debug暂不校验bundleId
     if (![bundleId isEqualToString:self.bundleId]) return;
 #endif
-    if (![self checkMinimalInterval]) return;
-    
     if ([self.appVersion compare:version options:NSNumericSearch] == NSOrderedAscending) {
+        if (![self checkMinimalInterval]) return;
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
             if (self.versionHandle != NULL) {
                 //外部自定义处理
